@@ -291,8 +291,14 @@ void laplace(Mat image){
 }
 
 void sobel(Mat image){
-  //todo
+  Mat temp_image;
+  Mat sobel_image;
+  Sobel(image, temp_image, CV_32F, 1, 1);
+  convertScaleAbs(temp_image, sobel_image, 1, 0);
+  imshow("Sobel", sobel_image);
+  waitKey(0);
 }
+
 void canny(Mat image) {
   //todo
 }
