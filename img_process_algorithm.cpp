@@ -133,6 +133,25 @@ int main(int argc, char** argv) {
       dft(image);
       break;
     }
+    case 6: {
+      cout << "Image Segmentation" << endl;
+      cout << "a. Kmeans" << endl;
+      cout << "b. Watershared" << endl;
+      cout << "Choose your desired method: " << endl;
+      char select_method;
+      cin >> select_method;
+      switch(select_method) {
+        case 'a': {
+          kmeans(image);
+          break;
+        }
+        case 'b': {
+          watershared(image);
+          break;
+        }
+      }
+      break;
+    }
     case 8: {
       exit();
       break;
@@ -334,7 +353,28 @@ void dft(Mat image) {
 }
 
 void kmeans(Mat image) {
-  //todo
+  Mat image2(image.size(), image.type());
+
+  Mat points;
+  image.convertTo(points, CV_32FC3);
+  points = points.reshape(3, image.rows*image.cols);
+
+  Mat_<int> clusters(points.size(), CV_32SC1);
+  Mat centers;
+
+  const int cluster = 5;
+  kmeans(points, cluster, clusters, cvTermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 10, 1.0), 1, KMEANS_PP_CENTERS, centers);
+
+  MatIterator_<Vec3b> itd = image2.begin<Vec3b>(),itd_end = image2.end<Vec3b>();
+  for (int i = 0; itd != itd_end; ++itd, ++i) {
+      Vec3f &color = centers.at<Vec3f>(clusters(i), 0);
+      (*itd)[0] = saturate_cast<uchar>(color[0]);
+      (*itd)[1] = saturate_cast<uchar>(color[1]);
+      (*itd)[2] = saturate_cast<uchar>(color[2]);
+  }
+  imshow("Input", image);
+  imshow("Output", image2);
+  waitKey(0);
 }
 
 void watershared(Mat image) {
