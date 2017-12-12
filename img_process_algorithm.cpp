@@ -18,7 +18,7 @@ void medianFilter(Mat image, int kernel_size);
 /*Phat hien canh bang loc thong cao*/
 void laplace(Mat image);
 void sobel(Mat image);
-void canny(Mat image);
+void canny(Mat image, int kernel_size);
 /*xu ly anh trong mien tan so*/
 void dft(Mat image);
 /*phan vung anh*/
@@ -130,7 +130,10 @@ int main(int argc, char** argv) {
           break;
         }
         case 'c': {
-          canny(image);
+          cout << "Enter kernel size" << endl;
+          int kernel_size;
+          cin >> kernel_size;
+          canny(image, kernel_size);
           break;
         }
       }
@@ -247,6 +250,7 @@ void medianFilter(Mat image, int kernel_size){
   imshow( "Median filter", imageDst );
   waitKey(0);
 }
+
 void laplace(Mat image){
   Mat image_gray, image_dst;
   int kernel_size = 3;
@@ -299,8 +303,11 @@ void sobel(Mat image){
   waitKey(0);
 }
 
-void canny(Mat image) {
-  //todo
+void canny(Mat image, int kernel_size) {
+  Mat canny_image;
+  Canny(image, canny_image, 50, 200, kernel_size);
+  imshow("Canny", canny_image);
+  waitKey(0);
 }
 void dft(Mat image) {
   cvtColor(image, image, CV_BGR2GRAY );
