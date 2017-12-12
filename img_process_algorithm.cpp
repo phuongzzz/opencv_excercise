@@ -14,7 +14,7 @@ void histogrameq_for_colorImg(Mat image);
 void nhanchap(Mat image, int kernel_size);
 /*Lam tron anh bang loc thong thap*/
 void gaussian(Mat image);
-void medianFilter(Mat image);
+void medianFilter(Mat image, int kernel_size);
 /*Phat hien canh bang loc thong cao*/
 void laplace(Mat image);
 void sobel(Mat image);
@@ -99,7 +99,15 @@ int main(int argc, char** argv) {
         }
         case 'b': {
           cout << "Using median filter" << endl;
-          medianFilter(image);
+          cout << "Enter kernel size" << endl;
+          int kernel_size;
+          cin >> kernel_size;
+          if (kernel_size %2 == 0) {
+            return 0;
+          }
+          else {
+            medianFilter(image, kernel_size);
+          }
         }
       }
       break;
@@ -232,10 +240,10 @@ void gaussian(Mat image){
   waitKey(0);
 }
 
-void medianFilter(Mat image){
+void medianFilter(Mat image, int kernel_size){
   Mat imageDst;
   imshow("Original Image", image);
-  medianBlur( image, imageDst, 31 );
+  medianBlur( image, imageDst, kernel_size );
   imshow( "Median filter", imageDst );
   waitKey(0);
 }
