@@ -233,7 +233,11 @@ void gaussian(Mat image){
 }
 
 void medianFilter(Mat image){
-  //todo
+  Mat imageDst;
+  imshow("Original Image", image);
+  medianBlur( image, imageDst, 31 );
+  imshow( "Median filter", imageDst );
+  waitKey(0);
 }
 void laplace(Mat image){
   Mat image_gray, image_dst;
