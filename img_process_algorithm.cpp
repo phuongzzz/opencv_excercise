@@ -325,6 +325,7 @@ void canny(Mat image, int kernel_size) {
   imshow("Canny", canny_image);
   waitKey(0);
 }
+
 void dft(Mat image) {
   cvtColor(image, image, CV_BGR2GRAY );
   Mat padded;
