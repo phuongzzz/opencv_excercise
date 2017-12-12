@@ -61,6 +61,7 @@ int main(int argc, char** argv) {
       cout << "Chon phuong phap can lam" << endl;
       cout << "a. Histogram Equalize (for grayscale image)" << endl;
       cout << "b. Histogram Equalize (for color image)" << endl;
+      cout << "Your selection: " << endl;
       char select1;
       cin >> select1;
       switch(select1) {
@@ -68,11 +69,19 @@ int main(int argc, char** argv) {
           histogrameq_for_grayImg(image);
           break;
         }
+        case 'b' : {
+          histogrameq_for_colorImg(image);
+          break;
+        }
       }
       break;
     }
     case 2: {
-      // canny();
+      cout << "Convolution with 2D filter" << endl;
+      cout << "Enter your desired kernel size: " << endl;
+      int kernel_size;
+      cin >> kernel_size;
+      nhanchap(image, kernel_size);
       break;
     }
     case 3: {
@@ -120,7 +129,27 @@ void histogrameq_for_grayImg(Mat image){
 }
 
 void histogrameq_for_colorImg(Mat image){
-  //todo
+  Mat imageHsv, imageDst;
+  cvtColor(image, imageHsv, CV_BGR2HSV);
+
+  vector<Mat> hsvChannels;
+  // Tách imageHsv thành 3 kênh màu
+  split(imageHsv, hsvChannels);
+
+  // Cân bằng histogram kênh màu v (Value)
+  equalizeHist(hsvChannels[2], hsvChannels[2]);
+
+  // Trộn ảnh
+  merge(hsvChannels, imageHsv);
+
+  // Chuyển đổi HSV sang RGB để hiển thị
+  cvtColor(imageHsv, imageDst, CV_HSV2BGR);
+
+  imshow("imageSrc", image);
+
+  imshow("imageDst", imageDst);
+
+  waitKey(0);
 }
 
 void gaussian(Mat image){
