@@ -128,6 +128,11 @@ int main(int argc, char** argv) {
       }
       break;
     }
+    case 5: {
+      cout << "Discrete Fourier Transform" << endl;
+      dft(image);
+      break;
+    }
     case 8: {
       exit();
       break;
@@ -261,7 +266,71 @@ void canny(Mat image) {
   //todo
 }
 void dft(Mat image) {
-  //todo
+  cvtColor(image, image, CV_BGR2GRAY );
+  Mat padded;
+  int m = getOptimalDFTSize( image.rows );
+  int n = getOptimalDFTSize( image.cols );
+  copyMakeBorder(image, padded, 0, m - image.rows, 0, n - image.cols, BORDER_CONSTANT, Scalar::all(0));
+
+  /*
+      Ket qua cua DFT la mot so phuc
+      Moi phan tu cua anh khi qua DFT deu sinh ra 2 gia tri
+      Gia tri mien tan so > Gia tri mien khong gian
+      Ta can luu cac gia tri nay it nhat la float
+      Convert anh, sau do convert qua channel khac de luu cac gia tri phuc
+  */
+  Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
+  Mat complexI;
+  merge(planes, 2, complexI);         // Add to the expanded another plane with zeros
+
+  /*
+      Khoi chay ham dft()
+  */
+  dft(complexI, complexI);            // this way the result may fit in the source matrix
+  // compute the magnitude and switch to logarithmic scale
+  // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
+
+  /*
+      Chuyen cac gia tri phuc va thuc sang do lon
+  */
+
+  split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
+  magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
+  Mat magI = planes[0];
+
+  /*
+      Dai dong (dynamic range) cua he so Fourier la qua lon de hien thi tren man hinh
+      => cac gia tri cao (high values) duoc hien thi boi mau trang
+      => cac gia tri thap (low values) duoc hien thi mau den
+  */
+
+  magI += Scalar::all(1);                    // switch to logarithmic scale
+  log(magI, magI);
+  // crop the spectrum, if it has an odd number of rows or columns
+
+  /*
+      Tra lai anh ve ban dau (do luc dau da bien doi anh)
+  */
+  magI = magI(Rect(0, 0, magI.cols & -2, magI.rows & -2));
+  // rearrange the quadrants of Fourier image  so that the origin is at the image center
+  int cx = magI.cols/2;
+  int cy = magI.rows/2;
+  Mat q0(magI, Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+  Mat q1(magI, Rect(cx, 0, cx, cy));  // Top-Right
+  Mat q2(magI, Rect(0, cy, cx, cy));  // Bottom-Left
+  Mat q3(magI, Rect(cx, cy, cx, cy)); // Bottom-Right
+  Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+  q0.copyTo(tmp);
+  q3.copyTo(q0);
+  tmp.copyTo(q3);
+  q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+  q2.copyTo(q1);
+  tmp.copyTo(q2);
+  normalize(magI, magI, 0, 1, NORM_MINMAX); // Transform the matrix with float values into a
+                                          // viewable image form (float between values 0 and 1).
+  imshow("Input Image", image);    // Show the result
+  imshow("spectrum magnitude", magI);
+  waitKey();
 }
 
 void kmeans(Mat image) {
