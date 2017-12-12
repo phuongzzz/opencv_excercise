@@ -62,9 +62,9 @@ int main(int argc, char** argv) {
       cout << "a. Histogram Equalize (for grayscale image)" << endl;
       cout << "b. Histogram Equalize (for color image)" << endl;
       cout << "Your selection: " << endl;
-      char select1;
-      cin >> select1;
-      switch(select1) {
+      char select_method;
+      cin >> select_method;
+      switch(select_method) {
         case 'a': {
           histogrameq_for_grayImg(image);
           break;
@@ -85,7 +85,28 @@ int main(int argc, char** argv) {
       break;
     }
     case 3: {
-      return 0;
+      cout << "Smoothing image" << endl;
+      cout << "Choose your desired method: " << endl;
+      cout << "a. Using Gaussian Filter" << endl;
+      cout << "b. Using Median Filter" << endl;
+      char select_method;
+      cin >> select_method;
+      switch(select_method) {
+        case 'a': {
+          cout << "Using gaussian filter" << endl;
+          gaussian(image);
+          break;
+        }
+        case 'b': {
+          cout << "Using median filter" << endl;
+          medianFilter(image);
+        }
+      }
+      break;
+    }
+    case 8: {
+      exit();
+      break;
     }
   }
 }
@@ -153,7 +174,14 @@ void histogrameq_for_colorImg(Mat image){
 }
 
 void gaussian(Mat image){
-  //todo
+  Mat blurredImage;
+  /*
+    Ap dung bo loc Gauss
+    Object Size bieu thi kich co cua bo loc (la gioi han cua viec lam mo anh)
+  */
+  GaussianBlur( image, blurredImage, Size( 9, 9 ), 1.0);
+  imshow("Blurred Image" , blurredImage);
+  waitKey(0);
 }
 
 void medianFilter(Mat image){
