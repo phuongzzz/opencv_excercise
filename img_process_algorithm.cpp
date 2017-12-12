@@ -2,16 +2,18 @@
 #include <string>
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#pragma GCC diagnostic ignored "-Wwrite-strings"
 
 using namespace std;
 using namespace cv;
 
+void nhanchap(Mat image, int kernel_size);
+void timbien();
+void histogrameq();
+void exit();
 
 int selection = 0;
 int k = 0;
-void nhanchap(Mat image, int kernel_size);
-void canny();
-void exit();
 
 int main(int argc, char** argv) {
   Mat image;

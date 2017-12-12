@@ -72,10 +72,13 @@ Mat morphology_operations (Mat imageSrc) {
   // cout << element;
 
   Mat morphologyImage; // result matrix
+  int morph_operator = 0;
+  int operation = morph_operator + 2;
     // Apply the specified morphology operation
   for (int i=1;i<10;i++){
-    morphologyEx( imageSrc, morphologyImage, MORPH_TOPHAT, element, Point(-1,-1), i );
+    // morphologyEx( imageSrc, morphologyImage, MORPH_TOPHAT, element, Point(-1,-1), i );
     //morphologyEx( src, dst, MORPH_TOPHAT, element ); // here iteration=1
+    morphologyEx( imageSrc, morphologyImage, operation, element );
     imshow("morphologyImage", morphologyImage);
     waitKey(3);
     }
