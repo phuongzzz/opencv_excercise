@@ -104,6 +104,30 @@ int main(int argc, char** argv) {
       }
       break;
     }
+    case 4: {
+      cout << "Edge detection" << endl;
+      cout << "a. Using Laplacian method" << endl;
+      cout << "b. Using Sobel method" << endl;
+      cout << "c. Using Canny method" << endl;
+      cout << "your selection: " << endl;
+      char select_method;
+      cin >> select_method;
+      switch(select_method) {
+        case 'a': {
+          laplace(image);
+          break;
+        }
+        case 'b': {
+          sobel(image);
+          break;
+        }
+        case 'c': {
+          canny(image);
+          break;
+        }
+      }
+      break;
+    }
     case 8: {
       exit();
       break;
@@ -188,8 +212,48 @@ void medianFilter(Mat image){
   //todo
 }
 void laplace(Mat image){
-  //todo
+  Mat image_gray, image_dst;
+  int kernel_size = 3;
+  int scale = 1;
+  int delta = 0;
+  int ddepth = CV_16S;
+  char* window_name = "Laplace Demo";
+  int c;
+  /*
+    Ap dung GaussianBlur de khu nhieu
+    src: anh dau vao
+    src#2: anh dau ra
+    Size: kich co cua ma tran mat na
+  */
+  GaussianBlur( image, image, Size(3,3), 0, 0, BORDER_DEFAULT );
+  /*
+    Chuyen anh sang dang grayscale
+  */
+  cvtColor( image, image_gray, CV_BGR2GRAY );
+  /*
+    Tao cua so moi
+  */
+  namedWindow( window_name, CV_WINDOW_AUTOSIZE );
+  /*
+    Ap dung toan tu LP
+  */
+  Mat abs_dst;
+  /*
+    src_gray: anh dau vao
+    dst: anh dau ra
+    ddepth: do sau cua anh dau ra
+    kernel_size: kich co cua ma tran mat na Sobel, hien tai la 3
+    scale, delta, BORDER_DEFAULT: de gai tri mac dinh
+  */
+  Laplacian( image_gray, image_dst, ddepth, kernel_size, scale, delta, BORDER_DEFAULT );
+  /*
+    Chuyen output tu dang toan tu LP sang CV_8U image
+  */
+  convertScaleAbs( image_dst, abs_dst );
+  imshow( window_name, abs_dst );
+  waitKey(0);
 }
+
 void sobel(Mat image){
   //todo
 }
