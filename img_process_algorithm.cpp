@@ -26,6 +26,8 @@ void kmeans(Mat image);
 void watershared(Mat image);
 /*hau xu ly anh*/
 void morphology(Mat image);
+/*resize image*/
+void resize(Mat image, int width, int height);
 /*thoat chuong trinh*/
 void exit();
 
@@ -47,12 +49,8 @@ int main(int argc, char** argv) {
     cout << " 5. Discrete Fourier Transform.\n";
     cout << " 6. Image Segmentation.\n";
     cout << " 7. Morphology.\n";
-    // cout << " 8.Canny\n";
-    // cout << " 9.DFT.\n";
-    // cout << " 10.Kmeans.\n";
-    // cout << " 11.Watershared.\n";
-    // cout << " 12.Morphology.\n";
-    cout << " 8. Exit.\n";
+    cout << " 8. Resize.\n";
+    cout << " 9. Exit.\n";
     cout << "Your selection:\t";
     cin >> selection;
 
@@ -164,12 +162,30 @@ int main(int argc, char** argv) {
       break;
     }
     case 8: {
+      cout << "Enter desired size: " << endl;
+      cout << "Enter width: \t";
+      int width;
+      cin >> width;
+      cout << "Enter height: \t";
+      int height;
+      cin >> height;
+      resize(image, width, height);
+      break;
+    }
+    case 9: {
       exit();
       break;
     }
   }
 }
  return 0;
+}
+
+void resize(Mat image, int width, int height) {
+  Mat imageDst;
+  resize(image, imageDst, cv::Size(), width, height);
+  imshow("resize image1", imageDst);
+  waitKey(0);
 }
 
 void nhanchap(Mat image, int kernel_size) {
